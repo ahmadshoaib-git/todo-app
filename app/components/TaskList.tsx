@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Checkbox, Flex, Icon, ListItem } from '@chakra-ui/react';
+import { Box, Checkbox, Flex, Icon, ListItem, Text } from '@chakra-ui/react';
 import { IoTrashBin } from 'react-icons/io5';
 import { CustomList } from '@/components';
 import TaskItem from './TaskItem';
