@@ -28,7 +28,8 @@ const TaskList = ({ tasksData, updateCompletedStatus, deleteTask }: Props) => {
                             >
                                 <Flex gap="0.1rem" alignItems="center">
                                     <Checkbox
-                                        checked={task.completed}
+                                        size="md"
+                                        isChecked={task.completed}
                                         colorScheme="purple"
                                         borderColor="purple"
                                         padding="1.5rem 0rem 1rem 1rem"
