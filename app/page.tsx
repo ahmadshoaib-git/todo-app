@@ -1,14 +1,13 @@
 'use client';
 import React from 'react';
-import { Badge, Box, Checkbox, Flex, ListItem, Text, Icon, FormControl, FormLabel } from '@chakra-ui/react';
+import { Box, Flex, FormControl, FormLabel } from '@chakra-ui/react';
 import { v1 as uuid } from 'uuid';
-import { FcCalendar, FcClock } from 'react-icons/fc';
 import { ImFlag } from 'react-icons/im';
-import { IoTrashBin } from 'react-icons/io5';
-import { CustomInput, CustomList, CustomSelect, CustomButton } from '@/components';
+import { CustomInput, CustomSelect, CustomButton } from '@/components';
 import { priorityData, initialTasksData } from '@/utils';
-import { ITasks, EPriority, Task } from '@/intefaces';
+import { EPriority, Task } from '@/intefaces';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import TaskList from './components/TaskList';
 
 const initialFormFields = {
     name: '',
@@ -38,13 +37,6 @@ export default function Home() {
         setFormInput(initialFormFields);
     };
 
-    const getPriorityColor = (priority: EPriority): string => {
-        let color = 'blue';
-        if (priority === EPriority.MEDIUM) color = 'green';
-        if (priority === EPriority.HIGH) color = 'red';
-        return color;
-    };
-
     const updateCompletedStatus = (uuid: string) => {
         let updatedTasksData = tasks.map((task: Task) => {
             if (uuid === task.id) {
@@ -67,43 +59,7 @@ export default function Home() {
         });
         setTasks(updatedTasksData);
     };
-    const getListInnerData = (task: Task): React.ReactElement => {
-        return (
-            <Box as="div" width="100%">
-                <Flex gap="0.5rem" alignItems="center" padding="1.5rem 1rem 1rem 1rem" height="1.4rem">
-                    <Text fontSize="md" fontWeight="bold" flexGrow="9" color="#1A365D" textDecoration={task.completed ? 'line-through' : 'unset'}>
-                        {task.name}
-                    </Text>
-                    <Badge
-                        variant="outline"
-                        colorScheme={getPriorityColor(task.priority)}
-                        textTransform="uppercase"
-                        fontSize="sm"
-                        maxW="5rem"
-                        flexGrow="1"
-                        textAlign="center"
-                    >
-                        {task.priority}
-                    </Badge>
-                </Flex>
-                <Flex justifyContent="space-between" padding="0rem 1rem 0.5rem 1rem">
-                    <Text fontSize="sm" display="flex" justifyContent="space-between" gap="0.2rem" alignItems="center" color="#1A365D">
-                        <FcCalendar />
-                        {new Date(task.date).toLocaleDateString('en-US')}
-                    </Text>
-                    {task.completed && (
-                        <Badge variant="outline" colorScheme="purple" textTransform="uppercase" fontSize="sm" maxW="6rem" textAlign="center">
-                            Completed
-                        </Badge>
-                    )}
-                    <Text fontSize="sm" display="flex" justifyContent="space-between" gap="0.2rem" alignItems="center" color="#1A365D">
-                        <FcClock />
-                        {new Date(task.date).toLocaleTimeString('en-US')}
-                    </Text>
-                </Flex>
-            </Box>
-        );
-    };
+
     return (
         <Box as="main" bg="gray.50" padding="2rem" marginBottom="2rem" borderRadius="0.4rem">
             <Flex w="xl" maxW="xl" flexDirection="column" borderRadius="0.2rem" height="calc(100vh - 12rem)">
@@ -181,56 +137,7 @@ export default function Home() {
                         },
                     }}
                 >
-                    <CustomList
-                        width="calc(100% - 5px)"
-                        listData={
-                            <>
-                                {tasks.length > 0 ? (
-                                    tasks.map((task, index) => (
-                                        <ListItem
-                                            key={index.toString()}
-                                            bg="gray.200"
-                                            cursor="pointer"
-                                            _hover={{
-                                                background: 'gray.300',
-                                            }}
-                                            borderRadius="0.3rem"
-                                        >
-                                            <Flex gap="0.1rem" alignItems="center">
-                                                <Checkbox
-                                                    checked={task.completed}
-                                                    colorScheme="purple"
-                                                    borderColor="purple"
-                                                    padding="1.5rem 0rem 1rem 1rem"
-                                                    onChange={() => updateCompletedStatus(task.id)}
-                                                />
-                                                {getListInnerData(task)}
-                                                <Box as="div" padding="1.5rem 1rem 1rem 0.5rem">
-                                                    <Icon
-                                                        as={IoTrashBin}
-                                                        color="#1A365D"
-                                                        cursor="pointer"
-                                                        fontSize="1.2rem"
-                                                        _hover={{ color: 'red.400' }}
-                                                        onClick={() => deleteTask(task.id)}
-                                                    />
-                                                </Box>
-                                            </Flex>
-                                        </ListItem>
-                                    ))
-                                ) : (
-                                    <ListItem h="calc(100% - 9rem)">
-                                        <Text fontSize="lg" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
-                                            No Task found !
-                                        </Text>
-                                        <Text fontSize="md" flexGrow="9" color="#525457" textAlign="center" marginTop="-0.1rem">
-                                            Please add new tasks ...
-                                        </Text>
-                                    </ListItem>
-                                )}
-                            </>
-                        }
-                    />
+                    <TaskList tasksData={tasks} updateCompletedStatus={updateCompletedStatus} deleteTask={deleteTask} />
                 </Box>
             </Flex>
         </Box>
