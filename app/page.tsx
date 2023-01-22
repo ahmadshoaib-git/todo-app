@@ -8,6 +8,7 @@ import { IoTrashBin } from 'react-icons/io5';
 import { CustomInput, CustomList, CustomSelect, CustomButton } from '@/components';
 import { priorityData, initialTasksData } from '@/utils';
 import { ITasks, EPriority, Task } from '@/intefaces';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
 const initialFormFields = {
     name: '',
@@ -15,7 +16,7 @@ const initialFormFields = {
 };
 
 export default function Home() {
-    const [tasks, setTasks] = React.useState(initialTasksData as ITasks);
+    const [tasks, setTasks] = useLocalStorage('todoData', initialTasksData);
     const [formInput, setFormInput] = React.useState(initialFormFields);
     const inputChangeHandler = (event: any): void => {
         setFormInput((prevFormState) => ({
@@ -25,6 +26,7 @@ export default function Home() {
     };
 
     const handleFormSubmit = (): void => {
+        if (!formInput.name) return;
         let taskData: Task = {
             id: uuid(),
             name: formInput.name,
@@ -69,7 +71,7 @@ export default function Home() {
         return (
             <Box as="div" width="100%">
                 <Flex gap="0.5rem" alignItems="center" padding="1.5rem 1rem 1rem 1rem" height="1.4rem">
-                    <Text fontSize="md" fontWeight="bold" flexGrow="9" color="#1A365D">
+                    <Text fontSize="md" fontWeight="bold" flexGrow="9" color="#1A365D" textDecoration={task.completed ? 'line-through' : 'unset'}>
                         {task.name}
                     </Text>
                     <Badge
@@ -103,8 +105,8 @@ export default function Home() {
         );
     };
     return (
-        <Box as="main" bg="gray.50" padding="2rem" h="100%" marginBottom="2rem" borderRadius="0.4rem">
-            <Flex h="100%" w="xl" maxW="40rem" flexDirection="column" borderRadius="0.2rem">
+        <Box as="main" bg="gray.50" padding="2rem" marginBottom="2rem" borderRadius="0.4rem">
+            <Flex w="xl" maxW="xl" flexDirection="column" borderRadius="0.2rem" height="calc(100vh - 12rem)">
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
@@ -159,8 +161,10 @@ export default function Home() {
                 <Box
                     as="div"
                     marginTop="2rem"
-                    paddingBottom="2rem"
+                    maxH="calc(100% - 9rem)"
                     overflowY="auto"
+                    display="flex"
+                    alignItems={tasks.length > 0 ? 'start' : 'center'}
                     css={{
                         '&::-webkit-scrollbar': {
                             width: '0.2rem',
@@ -178,40 +182,52 @@ export default function Home() {
                     }}
                 >
                     <CustomList
+                        width="calc(100% - 5px)"
                         listData={
                             <>
-                                {tasks.map((task, index) => (
-                                    <ListItem
-                                        key={index.toString()}
-                                        bg="gray.200"
-                                        cursor="pointer"
-                                        _hover={{
-                                            background: 'gray.300',
-                                        }}
-                                        borderRadius="0.3rem"
-                                    >
-                                        <Flex gap="0.1rem" alignItems="center">
-                                            <Checkbox
-                                                checked={task.completed}
-                                                colorScheme="purple"
-                                                borderColor="purple"
-                                                padding="1.5rem 0rem 1rem 1rem"
-                                                onChange={() => updateCompletedStatus(task.id)}
-                                            />
-                                            {getListInnerData(task)}
-                                            <Box as="div" padding="1.5rem 1rem 1rem 0.5rem">
-                                                <Icon
-                                                    as={IoTrashBin}
-                                                    color="#1A365D"
-                                                    cursor="pointer"
-                                                    fontSize="1.2rem"
-                                                    _hover={{ color: 'red.400' }}
-                                                    onClick={() => deleteTask(task.id)}
+                                {tasks.length > 0 ? (
+                                    tasks.map((task, index) => (
+                                        <ListItem
+                                            key={index.toString()}
+                                            bg="gray.200"
+                                            cursor="pointer"
+                                            _hover={{
+                                                background: 'gray.300',
+                                            }}
+                                            borderRadius="0.3rem"
+                                        >
+                                            <Flex gap="0.1rem" alignItems="center">
+                                                <Checkbox
+                                                    checked={task.completed}
+                                                    colorScheme="purple"
+                                                    borderColor="purple"
+                                                    padding="1.5rem 0rem 1rem 1rem"
+                                                    onChange={() => updateCompletedStatus(task.id)}
                                                 />
-                                            </Box>
-                                        </Flex>
+                                                {getListInnerData(task)}
+                                                <Box as="div" padding="1.5rem 1rem 1rem 0.5rem">
+                                                    <Icon
+                                                        as={IoTrashBin}
+                                                        color="#1A365D"
+                                                        cursor="pointer"
+                                                        fontSize="1.2rem"
+                                                        _hover={{ color: 'red.400' }}
+                                                        onClick={() => deleteTask(task.id)}
+                                                    />
+                                                </Box>
+                                            </Flex>
+                                        </ListItem>
+                                    ))
+                                ) : (
+                                    <ListItem h="calc(100% - 9rem)">
+                                        <Text fontSize="lg" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
+                                            No Task found !
+                                        </Text>
+                                        <Text fontSize="md" flexGrow="9" color="#525457" textAlign="center" marginTop="-0.1rem">
+                                            Please add new tasks ...
+                                        </Text>
                                     </ListItem>
-                                ))}
+                                )}
                             </>
                         }
                     />
