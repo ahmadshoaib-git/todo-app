@@ -1,13 +1,15 @@
 'use client';
 import React from 'react';
-import { Box, Flex, FormControl, FormLabel } from '@chakra-ui/react';
+import { Box, Checkbox, Flex, FormControl, FormLabel, Text } from '@chakra-ui/react';
 import { v1 as uuid } from 'uuid';
 import { ImFlag } from 'react-icons/im';
 import { CustomInput, CustomSelect, CustomButton } from '@/components';
 import { priorityData, initialTasksData } from '@/utils';
-import { EPriority, Task } from '@/intefaces';
+import { EPriority, ITasks, Task } from '@/intefaces';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import TaskList from './components/TaskList';
+
+type TFilter = 'all' | 'completed' | EPriority;
 
 const initialFormFields = {
     name: '',
@@ -17,6 +19,7 @@ const initialFormFields = {
 export default function Home() {
     const [tasks, setTasks] = useLocalStorage('todoData', initialTasksData);
     const [formInput, setFormInput] = React.useState(initialFormFields);
+    const [filter, setFilter] = React.useState('all' as TFilter);
     const inputChangeHandler = (event: any): void => {
         setFormInput((prevFormState) => ({
             ...prevFormState,
@@ -59,6 +62,20 @@ export default function Home() {
         });
         setTasks(updatedTasksData);
     };
+
+    const getTotalTasks = (): ITasks => {
+        return tasks.filter((task) => {
+            if (filter !== 'all') {
+                if (filter === 'completed' && task.completed) return task;
+                else if (task.priority === filter) return task;
+                else return;
+            } else return task;
+        });
+    };
+
+    const tasksLength = tasks?.length ? tasks.length : 0;
+    const completedTasks = getTotalTasks().filter((task) => task.completed === true)?.length;
+    console.log('filter >', filter === EPriority.HIGH);
 
     return (
         <Box as="main" bg="gray.50" padding="2rem" marginBottom="2rem" borderRadius="0.4rem">
@@ -114,6 +131,82 @@ export default function Home() {
                         }}
                     />
                 </form>
+                <Flex gap="1rem" marginTop="1rem" justifyContent="space-between">
+                    <Flex>
+                        <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
+                            Total Tasks:
+                        </Text>
+                        <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
+                            {getTotalTasks()?.length || 0}/{tasksLength}
+                        </Text>
+                    </Flex>
+
+                    <Flex>
+                        <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
+                            Completed:
+                        </Text>
+                        <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
+                            {completedTasks}/{getTotalTasks()?.length || 0}
+                        </Text>
+                    </Flex>
+                </Flex>
+                <Flex gap="1rem" marginTop="1rem" justifyContent="space-between">
+                    <Checkbox
+                        name="all"
+                        marginRight="0.4rem"
+                        size="md"
+                        isChecked={filter === 'all'}
+                        colorScheme="gray"
+                        borderColor="gray"
+                        onChange={() => setFilter('all')}
+                    >
+                        All
+                    </Checkbox>
+                    <Checkbox
+                        name="completed"
+                        marginRight="0.4rem"
+                        size="md"
+                        isChecked={filter === 'completed'}
+                        colorScheme="purple"
+                        borderColor="purple"
+                        onChange={() => setFilter('completed')}
+                    >
+                        Completed
+                    </Checkbox>
+                    <Checkbox
+                        name={EPriority.LOW}
+                        marginRight="0.4rem"
+                        size="md"
+                        isChecked={filter === EPriority.LOW}
+                        colorScheme="blue"
+                        borderColor="blue"
+                        onChange={() => setFilter(EPriority.LOW)}
+                    >
+                        {EPriority.LOW}
+                    </Checkbox>
+                    <Checkbox
+                        name={EPriority.MEDIUM}
+                        marginRight="0.4rem"
+                        size="md"
+                        isChecked={filter === EPriority.MEDIUM}
+                        colorScheme="green"
+                        borderColor="green"
+                        onChange={() => setFilter(EPriority.MEDIUM)}
+                    >
+                        {EPriority.MEDIUM}
+                    </Checkbox>
+                    <Checkbox
+                        name={EPriority.HIGH}
+                        marginRight="0.4rem"
+                        size="md"
+                        isChecked={filter === EPriority.HIGH}
+                        colorScheme="red"
+                        borderColor="red"
+                        onChange={() => setFilter(EPriority.HIGH)}
+                    >
+                        {EPriority.HIGH}
+                    </Checkbox>
+                </Flex>
                 <Box
                     as="div"
                     marginTop="2rem"
@@ -137,7 +230,7 @@ export default function Home() {
                         },
                     }}
                 >
-                    <TaskList tasksData={tasks} updateCompletedStatus={updateCompletedStatus} deleteTask={deleteTask} />
+                    <TaskList tasksData={getTotalTasks()} updateCompletedStatus={updateCompletedStatus} deleteTask={deleteTask} />
                 </Box>
             </Flex>
         </Box>
