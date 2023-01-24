@@ -75,7 +75,6 @@ export default function Home() {
 
     const tasksLength = tasks?.length ? tasks.length : 0;
     const completedTasks = getTotalTasks().filter((task) => task.completed === true)?.length;
-    console.log('filter >', filter === EPriority.HIGH);
 
     return (
         <Box as="main" bg="gray.50" padding="2rem" marginBottom="2rem" borderRadius="0.4rem">
@@ -83,7 +82,6 @@ export default function Home() {
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        console.log('Submitting');
                         handleFormSubmit();
                     }}
                 >
