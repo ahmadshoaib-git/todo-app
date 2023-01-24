@@ -131,82 +131,86 @@ export default function Home() {
                         }}
                     />
                 </form>
-                <Flex gap="1rem" marginTop="1rem" justifyContent="space-between">
-                    <Flex>
-                        <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
-                            Total Tasks:
-                        </Text>
-                        <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
-                            {getTotalTasks()?.length || 0}/{tasksLength}
-                        </Text>
-                    </Flex>
+                {tasksLength > 0 && (
+                    <>
+                        <Flex gap="1rem" marginTop="1rem" justifyContent="space-between">
+                            <Flex>
+                                <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
+                                    Total Tasks:
+                                </Text>
+                                <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
+                                    {getTotalTasks()?.length || 0}/{tasksLength}
+                                </Text>
+                            </Flex>
 
-                    <Flex>
-                        <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
-                            Completed:
-                        </Text>
-                        <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
-                            {completedTasks}/{getTotalTasks()?.length || 0}
-                        </Text>
-                    </Flex>
-                </Flex>
-                <Flex gap="1rem" marginTop="1rem" justifyContent="space-between">
-                    <Checkbox
-                        name="all"
-                        marginRight="0.4rem"
-                        size="md"
-                        isChecked={filter === 'all'}
-                        colorScheme="gray"
-                        borderColor="gray"
-                        onChange={() => setFilter('all')}
-                    >
-                        All
-                    </Checkbox>
-                    <Checkbox
-                        name="completed"
-                        marginRight="0.4rem"
-                        size="md"
-                        isChecked={filter === 'completed'}
-                        colorScheme="purple"
-                        borderColor="purple"
-                        onChange={() => setFilter('completed')}
-                    >
-                        Completed
-                    </Checkbox>
-                    <Checkbox
-                        name={EPriority.LOW}
-                        marginRight="0.4rem"
-                        size="md"
-                        isChecked={filter === EPriority.LOW}
-                        colorScheme="blue"
-                        borderColor="blue"
-                        onChange={() => setFilter(EPriority.LOW)}
-                    >
-                        {EPriority.LOW}
-                    </Checkbox>
-                    <Checkbox
-                        name={EPriority.MEDIUM}
-                        marginRight="0.4rem"
-                        size="md"
-                        isChecked={filter === EPriority.MEDIUM}
-                        colorScheme="green"
-                        borderColor="green"
-                        onChange={() => setFilter(EPriority.MEDIUM)}
-                    >
-                        {EPriority.MEDIUM}
-                    </Checkbox>
-                    <Checkbox
-                        name={EPriority.HIGH}
-                        marginRight="0.4rem"
-                        size="md"
-                        isChecked={filter === EPriority.HIGH}
-                        colorScheme="red"
-                        borderColor="red"
-                        onChange={() => setFilter(EPriority.HIGH)}
-                    >
-                        {EPriority.HIGH}
-                    </Checkbox>
-                </Flex>
+                            <Flex>
+                                <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
+                                    Completed:
+                                </Text>
+                                <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
+                                    {completedTasks}/{getTotalTasks()?.length || 0}
+                                </Text>
+                            </Flex>
+                        </Flex>
+                        <Flex gap="1rem" marginTop="1rem" justifyContent="space-between">
+                            <Checkbox
+                                name="all"
+                                marginRight="0.4rem"
+                                size="md"
+                                isChecked={filter === 'all'}
+                                colorScheme="gray"
+                                borderColor="gray"
+                                onChange={() => setFilter('all')}
+                            >
+                                All
+                            </Checkbox>
+                            <Checkbox
+                                name="completed"
+                                marginRight="0.4rem"
+                                size="md"
+                                isChecked={filter === 'completed'}
+                                colorScheme="purple"
+                                borderColor="purple"
+                                onChange={() => setFilter('completed')}
+                            >
+                                Completed
+                            </Checkbox>
+                            <Checkbox
+                                name={EPriority.LOW}
+                                marginRight="0.4rem"
+                                size="md"
+                                isChecked={filter === EPriority.LOW}
+                                colorScheme="blue"
+                                borderColor="blue"
+                                onChange={() => setFilter(EPriority.LOW)}
+                            >
+                                {EPriority.LOW}
+                            </Checkbox>
+                            <Checkbox
+                                name={EPriority.MEDIUM}
+                                marginRight="0.4rem"
+                                size="md"
+                                isChecked={filter === EPriority.MEDIUM}
+                                colorScheme="green"
+                                borderColor="green"
+                                onChange={() => setFilter(EPriority.MEDIUM)}
+                            >
+                                {EPriority.MEDIUM}
+                            </Checkbox>
+                            <Checkbox
+                                name={EPriority.HIGH}
+                                marginRight="0.4rem"
+                                size="md"
+                                isChecked={filter === EPriority.HIGH}
+                                colorScheme="red"
+                                borderColor="red"
+                                onChange={() => setFilter(EPriority.HIGH)}
+                            >
+                                {EPriority.HIGH}
+                            </Checkbox>
+                        </Flex>
+                    </>
+                )}
                 <Box
                     as="div"
                     marginTop="2rem"
