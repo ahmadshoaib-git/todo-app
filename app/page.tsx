@@ -9,7 +9,12 @@ import { EPriority, ITasks, Task } from '@/intefaces';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import TaskList from './components/TaskList';
 
-type TFilter = 'all' | 'completed' | EPriority;
+enum ERecordFilter {
+    ALL = 'all',
+    COMPLETED = 'completed',
+}
+
+type TFilter = ERecordFilter | EPriority;
 
 const initialFormFields = {
     name: '',
@@ -19,7 +24,7 @@ const initialFormFields = {
 export default function Home() {
     const [tasks, setTasks] = useLocalStorage('todoData', initialTasksData);
     const [formInput, setFormInput] = React.useState(initialFormFields);
-    const [filter, setFilter] = React.useState('all' as TFilter);
+    const [filter, setFilter] = React.useState(ERecordFilter.ALL as TFilter);
     const inputChangeHandler = (event: any): void => {
         setFormInput((prevFormState) => ({
             ...prevFormState,
@@ -65,8 +70,8 @@ export default function Home() {
 
     const getTotalTasks = (): ITasks => {
         return tasks.filter((task) => {
-            if (filter !== 'all') {
-                if (filter === 'completed' && task.completed) return task;
+            if (filter !== ERecordFilter.ALL) {
+                if (filter === ERecordFilter.COMPLETED && task.completed) return task;
                 else if (task.priority === filter) return task;
                 else return;
             } else return task;
@@ -155,10 +160,10 @@ export default function Home() {
                                 name="all"
                                 marginRight="0.4rem"
                                 size="md"
-                                isChecked={filter === 'all'}
+                                isChecked={filter === ERecordFilter.ALL}
                                 colorScheme="gray"
                                 borderColor="gray"
-                                onChange={() => setFilter('all')}
+                                onChange={() => setFilter(ERecordFilter.ALL)}
                             >
                                 All
                             </Checkbox>
@@ -166,10 +171,10 @@ export default function Home() {
                                 name="completed"
                                 marginRight="0.4rem"
                                 size="md"
-                                isChecked={filter === 'completed'}
+                                isChecked={filter === ERecordFilter.COMPLETED}
                                 colorScheme="purple"
                                 borderColor="purple"
-                                onChange={() => setFilter('completed')}
+                                onChange={() => setFilter(ERecordFilter.COMPLETED)}
                             >
                                 Completed
                             </Checkbox>
