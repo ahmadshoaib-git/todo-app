@@ -5,16 +5,11 @@ import { v1 as uuid } from 'uuid';
 import { ImFlag } from 'react-icons/im';
 import { CustomInput, CustomSelect, CustomButton } from '@/components';
 import { priorityData, initialTasksData } from '@/utils';
-import { EPriority, ITasks, Task } from '@/intefaces';
+import { EPriority, ERecordFilter, TFilter, ITasks, Task } from '@/intefaces';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import TaskList from './components/TaskList';
-
-enum ERecordFilter {
-    ALL = 'all',
-    COMPLETED = 'completed',
-}
-
-type TFilter = ERecordFilter | EPriority;
+import Stats from './components/Stats';
+import TasksFilter from './components/Filters';
 
 const initialFormFields = {
     name: '',
@@ -136,82 +131,8 @@ export default function Home() {
                 </form>
                 {tasksLength > 0 && (
                     <>
-                        <Flex gap="1rem" marginTop="1rem" justifyContent="space-between">
-                            <Flex>
-                                <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
-                                    Total Tasks:
-                                </Text>
-                                <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
-                                    {getTotalTasks()?.length || 0}/{tasksLength}
-                                </Text>
-                            </Flex>
-
-                            <Flex>
-                                <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
-                                    Completed:
-                                </Text>
-                                <Text fontSize="sm" fontWeight="bold" flexGrow="9" color="#353a42" textAlign="center">
-                                    {completedTasks}/{getTotalTasks()?.length || 0}
-                                </Text>
-                            </Flex>
-                        </Flex>
-                        <Flex gap="1rem" marginTop="1rem" justifyContent="space-between">
-                            <Checkbox
-                                name="all"
-                                marginRight="0.4rem"
-                                size="md"
-                                isChecked={filter === ERecordFilter.ALL}
-                                colorScheme="gray"
-                                borderColor="gray"
-                                onChange={() => setFilter(ERecordFilter.ALL)}
-                            >
-                                All
-                            </Checkbox>
-                            <Checkbox
-                                name="completed"
-                                marginRight="0.4rem"
-                                size="md"
-                                isChecked={filter === ERecordFilter.COMPLETED}
-                                colorScheme="purple"
-                                borderColor="purple"
-                                onChange={() => setFilter(ERecordFilter.COMPLETED)}
-                            >
-                                Completed
-                            </Checkbox>
-                            <Checkbox
-                                name={EPriority.LOW}
-                                marginRight="0.4rem"
-                                size="md"
-                                isChecked={filter === EPriority.LOW}
-                                colorScheme="blue"
-                                borderColor="blue"
-                                onChange={() => setFilter(EPriority.LOW)}
-                            >
-                                {EPriority.LOW}
-                            </Checkbox>
-                            <Checkbox
-                                name={EPriority.MEDIUM}
-                                marginRight="0.4rem"
-                                size="md"
-                                isChecked={filter === EPriority.MEDIUM}
-                                colorScheme="green"
-                                borderColor="green"
-                                onChange={() => setFilter(EPriority.MEDIUM)}
-                            >
-                                {EPriority.MEDIUM}
-                            </Checkbox>
-                            <Checkbox
-                                name={EPriority.HIGH}
-                                marginRight="0.4rem"
-                                size="md"
-                                isChecked={filter === EPriority.HIGH}
-                                colorScheme="red"
-                                borderColor="red"
-                                onChange={() => setFilter(EPriority.HIGH)}
-                            >
-                                {EPriority.HIGH}
-                            </Checkbox>
-                        </Flex>
+                        <Stats tasksLength={tasksLength} filteredTaskLength={getTotalTasks()?.length || 0} completedTasksLength={completedTasks} />
+                        <TasksFilter filterName={filter} applyFilter={(newFilter) => setFilter(newFilter)} />
                     </>
                 )}
                 <Box
