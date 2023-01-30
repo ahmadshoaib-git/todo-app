@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Box, Checkbox, Flex, FormControl, FormLabel, Text } from '@chakra-ui/react';
+import { Box, Flex, FormControl, FormLabel } from '@chakra-ui/react';
 import { v1 as uuid } from 'uuid';
 import { ImFlag } from 'react-icons/im';
 import { CustomInput, CustomSelect, CustomButton } from '@/components';
