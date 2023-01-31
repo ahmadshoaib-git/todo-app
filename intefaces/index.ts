@@ -20,6 +20,6 @@ type Task = { id: string; name: string; priority: EPriority; date: string; compl
 
 type ITasks = Array<Task>;
 
-export type { IPriorityData, ITasks, Task };
-export { EPriority, ERecordFilter, TFilter };
+export type { IPriorityData, ITasks, Task, TFilter };
+export { EPriority, ERecordFilter };
 
